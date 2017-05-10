@@ -1,0 +1,132 @@
+var _user$project$Tetromino$rotateLocation = F3(
+	function (pivot, angle, _p0) {
+		var _p1 = _p0;
+		var _p2 = {
+			ctor: '_Tuple2',
+			_0: _elm_lang$core$Basics$sin(angle),
+			_1: _elm_lang$core$Basics$cos(angle)
+		};
+		var s = _p2._0;
+		var c = _p2._1;
+		var colOrigin = _elm_lang$core$Basics$toFloat(_p1._1) - pivot.c;
+		var rowOrigin = _elm_lang$core$Basics$toFloat(_p1._0) - pivot.r;
+		var rowRotated = (rowOrigin * c) - (colOrigin * s);
+		var colRotated = (rowOrigin * s) + (colOrigin * c);
+		var _p3 = {
+			ctor: '_Tuple2',
+			_0: _elm_lang$core$Basics$round(rowRotated + pivot.r),
+			_1: _elm_lang$core$Basics$round(colRotated + pivot.c)
+		};
+		var newRow = _p3._0;
+		var newCol = _p3._1;
+		return {ctor: '_Tuple2', _0: newRow, _1: newCol};
+	});
+var _user$project$Tetromino$rotate = function (tetromino) {
+	var rotateHelper = A2(
+		_user$project$Tetromino$rotateLocation,
+		tetromino.pivot,
+		_elm_lang$core$Basics$degrees(90));
+	var newShape = A2(_elm_lang$core$List$map, rotateHelper, tetromino.shape);
+	return _elm_lang$core$Native_Utils.update(
+		tetromino,
+		{shape: newShape, rows: tetromino.cols, cols: tetromino.rows});
+};
+var _user$project$Tetromino$drawPivot = function (_p4) {
+	var _p5 = _p4;
+	var _p6 = _p5.pivot;
+	var translate = _evancz$elm_graphics$Collage$move(
+		{ctor: '_Tuple2', _0: _p6.c * _user$project$Block$size, _1: _p6.r * _user$project$Block$size});
+	var dot = A2(
+		_evancz$elm_graphics$Collage$filled,
+		_elm_lang$core$Color$black,
+		_evancz$elm_graphics$Collage$circle(5));
+	return translate(dot);
+};
+var _user$project$Tetromino$j = {
+	shape: {
+		ctor: '::',
+		_0: {ctor: '_Tuple2', _0: 1, _1: 0},
+		_1: {
+			ctor: '::',
+			_0: {ctor: '_Tuple2', _0: 0, _1: 0},
+			_1: {
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: -1, _1: -1},
+				_1: {
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: -1, _1: 0},
+					_1: {ctor: '[]'}
+				}
+			}
+		}
+	},
+	block: _user$project$Block$Block(_elm_lang$core$Color$lightGreen),
+	pivot: {r: 0.0, c: 0.0},
+	rows: 3,
+	cols: 2
+};
+var _user$project$Tetromino$tetromino = _user$project$Tetromino$rotate(
+	_user$project$Tetromino$rotate(
+		_user$project$Tetromino$rotate(
+			_user$project$Tetromino$rotate(
+				_user$project$Tetromino$rotate(
+					_user$project$Tetromino$rotate(_user$project$Tetromino$j))))));
+var _user$project$Tetromino$i = {
+	shape: {
+		ctor: '::',
+		_0: {ctor: '_Tuple2', _0: 1, _1: 0},
+		_1: {
+			ctor: '::',
+			_0: {ctor: '_Tuple2', _0: 0, _1: 0},
+			_1: {
+				ctor: '::',
+				_0: {ctor: '_Tuple2', _0: -1, _1: 0},
+				_1: {
+					ctor: '::',
+					_0: {ctor: '_Tuple2', _0: -2, _1: 0},
+					_1: {ctor: '[]'}
+				}
+			}
+		}
+	},
+	block: _user$project$Block$Block(_elm_lang$core$Color$lightOrange),
+	pivot: {r: -0.5, c: 0.5},
+	rows: 4,
+	cols: 1
+};
+var _user$project$Tetromino$toForm = function (_p7) {
+	var _p8 = _p7;
+	var form = _user$project$Block$toForm(_p8.block);
+	var translate = function (_p9) {
+		var _p10 = _p9;
+		return A2(
+			_evancz$elm_graphics$Collage$move,
+			{
+				ctor: '_Tuple2',
+				_0: _elm_lang$core$Basics$toFloat(_p10._1) * _user$project$Block$size,
+				_1: _elm_lang$core$Basics$toFloat(_p10._0) * _user$project$Block$size
+			},
+			form);
+	};
+	var forms = A2(_elm_lang$core$List$map, translate, _p8.shape);
+	return _evancz$elm_graphics$Collage$group(forms);
+};
+var _user$project$Tetromino$main = _elm_lang$virtual_dom$Native_VirtualDom.staticProgram(
+	_evancz$elm_graphics$Element$toHtml(
+		A3(
+			_evancz$elm_graphics$Collage$collage,
+			400,
+			400,
+			{
+				ctor: '::',
+				_0: _user$project$Tetromino$toForm(_user$project$Tetromino$tetromino),
+				_1: {
+					ctor: '::',
+					_0: _user$project$Tetromino$drawPivot(_user$project$Tetromino$tetromino),
+					_1: {ctor: '[]'}
+				}
+			})));
+var _user$project$Tetromino$Tetromino = F5(
+	function (a, b, c, d, e) {
+		return {shape: a, block: b, pivot: c, rows: d, cols: e};
+	});
